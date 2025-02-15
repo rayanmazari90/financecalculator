@@ -1,6 +1,7 @@
 import streamlit as st
 import numpy as np
-
+import math
+import sympy as sp  
 ####################################
 # Helper Functions 
 # (Time Value, Bonds, Capital Budgeting, Stock Valuation)
@@ -591,3 +592,21 @@ elif selected_formula == "Free Cash Flow (FCF)":
     if st.button("Calculate Free Cash Flow"):
         fcf_result = free_cash_flow(ebit, tax_rate, depreciation, capex, delta_nwc)
         st.success(f"Free Cash Flow (FCF) = ${fcf_result:,.2f}")
+
+st.markdown("---")
+st.header("Scientific Calculator")
+st.markdown("Enter any mathematical expression. For example: `sin(pi/2) + log(10)`.\n\n"
+            "This calculator leverages **Sympy** to parse and evaluate your expression, "
+            "supporting a wide range of functions, constants, and even symbolic operations.")
+
+# Text input for the user to enter an expression
+expression = st.text_input("Expression", value="sin(pi/2) + log(10)")
+
+if st.button("Evaluate Expression"):
+    try:
+        # Parse and evaluate the expression using sympy
+        expr = sp.sympify(expression)
+        result = sp.N(expr)
+        st.success(f"Result: {result}")
+    except Exception as e:
+        st.error(f"Error evaluating expression: {e}")
