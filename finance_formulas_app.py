@@ -489,7 +489,7 @@ elif selected_formula == "Stock - Required Return (Gordon Growth)":
     
     P0 = st.number_input("Current Stock Price P0", value=40.0, step=1.0)
     D1 = st.number_input("Next Period Dividend D1", value=4.0, step=0.1)
-    g = st.number_input("Growth Rate g (decimal)", value=0.06, step=1e-4)
+    g = st.number_input("Growth Rate g (decimal)", value=0.06, step=1e-4, format="%.4f")
     
     if st.button("Calculate Required Return"):
         if P0 <= 0:
