@@ -309,7 +309,7 @@ elif selected_formula == "Bond Price (Coupon)":
     """)
     face_value = st.number_input("Face Value", value=1000.0, step=1.0)
     coupon_rate = st.number_input("Annual Coupon Rate (decimal)", value=0.06, step=1e-4)
-    years_to_maturity = st.number_input("Years to Maturity", value=10,  step=1e-4)
+    years_to_maturity = st.number_input("Years to Maturity", value=10.0,  step=1e-4)
     coupons_per_year = st.number_input("Coupons per Year", value=2, step=1)
     ytm_annual = st.number_input("Annual YTM (decimal)", value=0.006, step=1e-6,format="%.6f")
     
