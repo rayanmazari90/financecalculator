@@ -166,6 +166,12 @@ def expected_return(probabilities, returns):
 def average_return(returns):
     return np.mean(returns)
 
+def capm_expected_return(rf, beta, rm):
+    return rf + beta * (rm - rf)
+
+def beta_value(correlation, sigma_i, sigma_m):
+    return correlation * (sigma_i / sigma_m)
+
 ####################################
 # App Layout with Categorization
 ####################################
@@ -210,7 +216,9 @@ categories = {
     ],
      "Risk Valuation": [
          "Expected Return",
-         "Average Return"
+         "Average Return",
+         "CAPM Expected Return",
+         "Beta Calculation"
      ]
 }
 
@@ -635,6 +643,26 @@ elif selected_formula == "Average Return":
             st.success(f"Average Return = {ar:.4f}")
         except ValueError:
             st.error("Invalid input. Please enter numerical values separated by commas.")
+
+elif selected_formula == "CAPM Expected Return":
+    st.subheader("CAPM Expected Return Calculation")
+    st.latex(r"E(r_i) = r_f + \beta_i (E(r_m) - r_f)")
+    rf = st.number_input("Risk-Free Rate (r_f)", value=0.03, step=0.001)
+    beta = st.number_input("Beta (β_i)", value=1.0, step=0.01)
+    rm = st.number_input("Expected Market Return (E(r_m))", value=0.08, step=0.001)
+    if st.button("Calculate CAPM Expected Return"):
+        capm_return = capm_expected_return(rf, beta, rm)
+        st.success(f"Expected Return = {capm_return:.4f}")
+
+if selected_formula == "Beta Calculation":
+    st.subheader("Beta Calculation")
+    st.latex(r"\beta_i = \frac{\rho_{i,m} \sigma_i}{\sigma_m}")
+    correlation = st.number_input("Correlation (ρ_i,m)", value=1.0, step=0.01)
+    sigma_i = st.number_input("Asset Standard Deviation (σ_i)", value=0.2, step=0.01)
+    sigma_m = st.number_input("Market Standard Deviation (σ_m)", value=0.15, step=0.01)
+    if st.button("Calculate Beta"):
+        beta_value_calculated = beta_value(correlation, sigma_i, sigma_m)
+        st.success(f"Beta = {beta_value_calculated:.4f}")
 
 st.markdown("---")
 st.header("Scientific Calculator")
