@@ -156,6 +156,9 @@ def corporate_value_model(fcf_list, r, g, debt, shares):
 def pe_multiple_valuation(eps, pe_ratio):
     return eps * pe_ratio
 
+def free_cash_flow(ebit, tax_rate, depreciation, capex, delta_nwc):
+    return ebit * (1 - tax_rate) + depreciation - capex - delta_nwc
+
 ####################################
 # App Layout with Categorization
 ####################################
@@ -195,7 +198,8 @@ categories = {
         "Stock - Required Return (Gordon Growth)",
         "Stock - Non-Constant Growth Dividend Price",
         "Corporate Value (FCF) Model",
-        "Stock Price from PE Multiple"
+        "Stock Price from PE Multiple",
+        "Free Cash Flow (FCF)"
     ]
 }
 
@@ -305,9 +309,9 @@ elif selected_formula == "Bond Price (Coupon)":
     """)
     face_value = st.number_input("Face Value", value=1000.0, step=1.0)
     coupon_rate = st.number_input("Annual Coupon Rate (decimal)", value=0.06, step=1e-4)
-    years_to_maturity = st.number_input("Years to Maturity", value=10, step=1)
+    years_to_maturity = st.number_input("Years to Maturity", value=10,  step=1e-4)
     coupons_per_year = st.number_input("Coupons per Year", value=2, step=1)
-    ytm_annual = st.number_input("Annual YTM (decimal)", value=0.06, step=1e-4)
+    ytm_annual = st.number_input("Annual YTM (decimal)", value=0.006, step=1e-6,format="%.6f")
     
     if st.button("Calculate Bond Price"):
         price = bond_price_coupon(face_value, coupon_rate, years_to_maturity, coupons_per_year, ytm_annual)
@@ -572,3 +576,18 @@ elif selected_formula == "Stock Price from PE Multiple":
     if st.button("Calculate Stock Price"):
         price = pe_multiple_valuation(eps, pe_ratio)
         st.success(f"Estimated Stock Price = ${price:,.2f}")
+
+elif selected_formula == "Free Cash Flow (FCF)":
+    st.subheader("Free Cash Flow Calculation")
+    st.latex(r"""
+    \text{FCF} = EBIT(1 - \tau_c) + \text{Depreciation} - \text{CapEx} - \Delta NWC
+    """)
+    ebit = st.number_input("Earnings Before Interest & Taxes (EBIT)", value=100.0, step=1.0)
+    tax_rate = st.number_input("Corporate Tax Rate (decimal)", value=0.25, step=0.01)
+    depreciation = st.number_input("Depreciation Expense", value=10.0, step=1.0)
+    capex = st.number_input("Capital Expenditures (CapEx)", value=20.0, step=1.0)
+    delta_nwc = st.number_input("Change in Net Working Capital (ΔNWC)", value=5.0, step=1.0)
+    
+    if st.button("Calculate Free Cash Flow"):
+        fcf_result = free_cash_flow(ebit, tax_rate, depreciation, capex, delta_nwc)
+        st.success(f"Free Cash Flow (FCF) = ${fcf_result:,.2f}")
