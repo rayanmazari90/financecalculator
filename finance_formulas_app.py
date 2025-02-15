@@ -160,6 +160,12 @@ def pe_multiple_valuation(eps, pe_ratio):
 def free_cash_flow(ebit, tax_rate, depreciation, capex, delta_nwc):
     return ebit * (1 - tax_rate) + depreciation - capex - delta_nwc
 
+def expected_return(probabilities, returns):
+    return np.sum(np.array(probabilities) * np.array(returns))
+
+def average_return(returns):
+    return np.mean(returns)
+
 ####################################
 # App Layout with Categorization
 ####################################
@@ -201,7 +207,11 @@ categories = {
         "Corporate Value (FCF) Model",
         "Stock Price from PE Multiple",
         "Free Cash Flow (FCF)"
-    ]
+    ],
+     "Risk Valuation": [
+         "Expected Return",
+         "Average Return"
+     ]
 }
 
 # 2) Let user select a category first
@@ -592,6 +602,39 @@ elif selected_formula == "Free Cash Flow (FCF)":
     if st.button("Calculate Free Cash Flow"):
         fcf_result = free_cash_flow(ebit, tax_rate, depreciation, capex, delta_nwc)
         st.success(f"Free Cash Flow (FCF) = ${fcf_result:,.2f}")
+
+
+elif selected_formula == "Expected Return":
+    st.subheader("Expected Return Calculation")
+    st.latex(r"E(R) = \sum_{s=1}^{S} p_s R_s")
+    num_states = st.number_input("Number of States", min_value=1, value=2, step=1)
+    probabilities = []
+    returns = []
+    for i in range(num_states):
+        probabilities.append(st.number_input(f"Probability of State {i+1}", min_value=0.0, max_value=1.0, step=0.01))
+        returns.append(st.number_input(f"Return in State {i+1}", step=0.01))
+    if st.button("Calculate Expected Return"):
+        if sum(probabilities) != 1:
+            st.error("Probabilities must sum to 1.")
+        else:
+            er = expected_return(probabilities, returns)
+            st.success(f"Expected Return = {er:.4f}")
+
+####################################
+# Average Return Calculation
+####################################
+
+elif selected_formula == "Average Return":
+    st.subheader("Average Return Calculation")
+    st.latex(r"\text{Average Return} = \frac{R_1 + R_2 + ... + R_T}{T}")
+    returns_list = st.text_area("Enter returns separated by commas", "0.1, -0.05, 0.2, 0.15")
+    if st.button("Calculate Average Return"):
+        try:
+            returns = [float(x.strip()) for x in returns_list.split(",")]
+            ar = average_return(returns)
+            st.success(f"Average Return = {ar:.4f}")
+        except ValueError:
+            st.error("Invalid input. Please enter numerical values separated by commas.")
 
 st.markdown("---")
 st.header("Scientific Calculator")
