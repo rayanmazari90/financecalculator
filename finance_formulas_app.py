@@ -172,6 +172,19 @@ def capm_expected_return(rf, beta, rm):
 def beta_value(correlation, sigma_i, sigma_m):
     return correlation * (sigma_i / sigma_m)
 
+def wacc(equity, debt, re, rd, tax_rate):
+    return (equity / (equity + debt)) * re + (debt / (equity + debt)) * rd * (1 - tax_rate)
+
+def cost_of_equity(rf, beta, rm):
+    return rf + beta * (rm - rf)
+
+def after_tax_cost_of_debt(rd, tax_rate):
+    return rd * (1 - tax_rate)
+
+def future_value(present_value, r, n):
+    return present_value * (1 + r)**n
+
+
 ####################################
 # App Layout with Categorization
 ####################################
@@ -219,7 +232,12 @@ categories = {
          "Average Return",
          "CAPM Expected Return",
          "Beta Calculation"
-     ]
+     ],
+     "Cost of Capital": [
+        "WACC Calculation",
+        "Cost of Equity (CAPM)",
+        "After-Tax Cost of Debt"
+    ]
 }
 
 # 2) Let user select a category first
@@ -654,7 +672,7 @@ elif selected_formula == "CAPM Expected Return":
         capm_return = capm_expected_return(rf, beta, rm)
         st.success(f"Expected Return = {capm_return:.4f}")
 
-if selected_formula == "Beta Calculation":
+elif selected_formula == "Beta Calculation":
     st.subheader("Beta Calculation")
     st.latex(r"\beta_i = \frac{\rho_{i,m} \sigma_i}{\sigma_m}")
     correlation = st.number_input("Correlation (ρ_i,m)", value=1.0, step=0.01)
@@ -663,6 +681,45 @@ if selected_formula == "Beta Calculation":
     if st.button("Calculate Beta"):
         beta_value_calculated = beta_value(correlation, sigma_i, sigma_m)
         st.success(f"Beta = {beta_value_calculated:.4f}")
+
+elif selected_formula == "WACC Calculation":
+    st.subheader("Weighted Average Cost of Capital (WACC) Calculation")
+    st.latex(r"WACC = \frac{E}{E+D} r_E + \frac{D}{E+D} r_D (1 - \tau)")
+    equity = st.number_input("Market Value of Equity (E)", value=4000000000.0, step=1000000.0)
+    debt = st.number_input("Market Value of Debt (D)", value=1000000000.0, step=1000000.0)
+    re = st.number_input("Cost of Equity (r_E)", value=0.1535, step=0.0001)
+    rd = st.number_input("Cost of Debt (r_D)", value=0.0785, step=0.0001)
+    tax_rate = st.number_input("Tax Rate (τ)", value=0.40, step=0.01)
+    if st.button("Calculate WACC"):
+        wacc_value = wacc(equity, debt, re, rd, tax_rate)
+        st.success(f"WACC = {wacc_value:.4f}")
+
+####################################
+# Cost of Equity Calculation
+####################################
+
+elif selected_formula == "Cost of Equity (CAPM)":
+    st.subheader("Cost of Equity Calculation using CAPM")
+    st.latex(r"r_E = r_f + \beta (E(R_M) - r_f)")
+    rf = st.number_input("Risk-Free Rate (r_f)", value=0.05, step=0.001)
+    beta = st.number_input("Beta (β)", value=1.15, step=0.01)
+    rm = st.number_input("Expected Market Return (E(R_M))", value=0.09, step=0.001)
+    if st.button("Calculate Cost of Equity"):
+        cost_equity = cost_of_equity(rf, beta, rm)
+        st.success(f"Cost of Equity = {cost_equity:.4f}")
+
+####################################
+# After-Tax Cost of Debt Calculation
+####################################
+
+elif selected_formula == "After-Tax Cost of Debt":
+    st.subheader("After-Tax Cost of Debt Calculation")
+    st.latex(r"r_D(1 - \tau)")
+    rd = st.number_input("Cost of Debt (r_D)", value=0.10, step=0.001)
+    tax_rate = st.number_input("Tax Rate (τ)", value=0.40, step=0.01)
+    if st.button("Calculate After-Tax Cost of Debt"):
+        after_tax_rd = after_tax_cost_of_debt(rd, tax_rate)
+        st.success(f"After-Tax Cost of Debt = {after_tax_rd:.4f}")
 
 st.markdown("---")
 st.header("Scientific Calculator")
