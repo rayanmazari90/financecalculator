@@ -213,6 +213,7 @@ st.write("---")
 
 if selected_formula == "Future Value (FV)":
     st.subheader("Future Value")
+    st.latex(r"\text{FV} = \text{PV} \times (1+r)^n")
     pv = st.number_input("Present Value", value=1000.0, step=1.0)
     r = st.number_input("Interest/Discount Rate (decimal)", value=0.10, 
                         step=1e-4, format="%.4f")
@@ -223,6 +224,7 @@ if selected_formula == "Future Value (FV)":
 
 elif selected_formula == "Present Value (PV)":
     st.subheader("Present Value")
+    st.latex(r"\text{PV} = \frac{\text{FV}}{(1+r)^n}")
     fv_amt = st.number_input("Future Value", value=1000.0, step=1.0)
     r = st.number_input("Discount Rate (decimal)", value=0.10, 
                         step=1e-4, format="%.4f")
@@ -233,6 +235,7 @@ elif selected_formula == "Present Value (PV)":
 
 elif selected_formula == "Annuity (PV)":
     st.subheader("Present Value of an Annuity")
+    st.latex(r"\text{PV}_{\text{annuity}} = C \times \frac{1 - (1+r)^{-n}}{r}")
     C = st.number_input("Regular Payment (C)", value=500.0, step=1.0)
     r = st.number_input("Discount Rate (decimal)", value=0.08, 
                         step=1e-4, format="%.4f")
@@ -243,6 +246,7 @@ elif selected_formula == "Annuity (PV)":
 
 elif selected_formula == "Annuity (FV)":
     st.subheader("Future Value of an Annuity")
+    st.latex(r"\text{FV}_{\text{annuity}} = C \times \frac{(1+r)^n - 1}{r}")
     C = st.number_input("Regular Payment (C)", value=500.0, step=1.0)
     r = st.number_input("Interest/Discount Rate (decimal)", value=0.08, 
                         step=1e-4, format="%.4f")
@@ -253,6 +257,7 @@ elif selected_formula == "Annuity (FV)":
 
 elif selected_formula == "Growing Annuity (PV)":
     st.subheader("Present Value of a Growing Annuity")
+    st.latex(r"\text{PV} = C_1 \times \frac{1 - \left(\frac{1+g}{1+r}\right)^n}{r-g}")
     C = st.number_input("First Payment (C1)", value=500.0, step=1.0)
     r = st.number_input("Discount Rate (decimal)", value=0.10, 
                         step=1e-4, format="%.4f")
@@ -265,6 +270,7 @@ elif selected_formula == "Growing Annuity (PV)":
 
 elif selected_formula == "Perpetuity":
     st.subheader("Present Value of a Perpetuity")
+    st.latex(r"\text{PV}_{\text{perpetuity}} = \frac{C}{r}")
     C = st.number_input("Constant Payment (C)", value=100.0, step=1.0)
     r = st.number_input("Discount Rate (decimal)", value=0.05, 
                         step=1e-4, format="%.4f")
@@ -274,6 +280,7 @@ elif selected_formula == "Perpetuity":
 
 elif selected_formula == "Growing Perpetuity":
     st.subheader("Present Value of a Growing Perpetuity")
+    st.latex(r"\text{PV}_{\text{growing perpetuity}} = \frac{C_1}{r - g}")
     C = st.number_input("Payment in NEXT Period (C1)", value=100.0, step=1.0)
     r = st.number_input("Discount Rate (decimal)", value=0.07, 
                         step=1e-4, format="%.4f")
@@ -292,6 +299,10 @@ elif selected_formula == "Growing Perpetuity":
 
 elif selected_formula == "Bond Price (Coupon)":
     st.subheader("Bond Price (Coupon Bond)")
+    st.latex(r"""
+    P = \text{Coupon PV (annuity)} + \text{Face Value PV}
+    = \left(\frac{C}{r}\left[1 - (1+r)^{-N}\right]\right) + \frac{F}{(1+r)^N}
+    """)
     face_value = st.number_input("Face Value", value=1000.0, step=1.0)
     coupon_rate = st.number_input("Annual Coupon Rate (decimal)", value=0.06, step=1e-4)
     years_to_maturity = st.number_input("Years to Maturity", value=10, step=1)
@@ -304,6 +315,7 @@ elif selected_formula == "Bond Price (Coupon)":
 
 elif selected_formula == "Bond YTM (Coupon)":
     st.subheader("Bond YTM (Coupon Bond)")
+    st.write("We solve for the yield (r) that sets the present value of all coupon and principal payments equal to the bond price.")
     face_value = st.number_input("Face Value", value=1000.0, step=1.0)
     coupon_rate = st.number_input("Annual Coupon Rate (decimal)", value=0.05, step=1e-4)
     years_to_maturity = st.number_input("Years to Maturity", value=10, step=1)
@@ -317,6 +329,7 @@ elif selected_formula == "Bond YTM (Coupon)":
 
 elif selected_formula == "Bond Coupon Rate":
     st.subheader("Bond Coupon Rate from Price and YTM")
+    st.write("Compute the annual coupon rate (c) given the bond's price, YTM, maturity, etc.")
     bond_price_val = st.number_input("Current Bond Price", value=1071.06, step=1.0)
     face_value_val = st.number_input("Face Value", value=1000.0, step=1.0)
     annual_ytm_val = st.number_input("Annual YTM (decimal)", value=0.07, step=1e-4)
@@ -337,6 +350,7 @@ elif selected_formula == "Bond Coupon Rate":
 
 elif selected_formula == "Net Present Value (NPV)":
     st.subheader("Net Present Value")
+    st.latex(r"\text{NPV} = \sum_{t=0}^{n} \frac{\text{CF}_t}{(1+r)^t}")
     st.write("Enter a sequence of cash flows including the initial cost (negative) at t=0.")
     num_flows = st.number_input("Number of cash flow periods (including t=0)?", value=3, step=1)
     
@@ -369,6 +383,7 @@ elif selected_formula == "Net Present Value (NPV)":
 
 elif selected_formula == "Internal Rate of Return (IRR)":
     st.subheader("Internal Rate of Return")
+    st.latex(r"\text{Solve for } r \text{ where } \text{NPV}=0")
     st.write("Enter a sequence of cash flows including the initial cost (negative) at t=0.")
     num_flows = st.number_input("Number of cash flow periods?", value=3, step=1)
     
@@ -423,6 +438,8 @@ elif selected_formula == "Discounted Payback Period":
 
 elif selected_formula == "Stock - Constant Dividend Price":
     st.subheader("Stock Price (Constant Dividend)")
+    # Add some explanation
+    st.markdown("**For a zero-growth stock (like preferred shares):**")
     st.latex(r"P_0 = \frac{D}{r}")
     
     dividend = st.number_input("Dividend per period (D)", value=2.0, step=0.1)
@@ -434,10 +451,13 @@ elif selected_formula == "Stock - Constant Dividend Price":
         else:
             price = stock_price_constant_dividend(dividend, r)
             st.success(f"Stock Price = {price:,.2f}")
+            st.markdown(f"**Dividend Yield** = D / P₀ = {dividend:.2f} / {price:.2f} = {(dividend/price)*100:.2f}%")
 
 elif selected_formula == "Stock - Constant Growth Dividend Price (Gordon Growth)":
     st.subheader("Stock Price (Constant Growth)")
-    st.latex(r"P_0 = \frac{D_1}{r - g} = \frac{D_0 (1 + g)}{r - g}")
+    st.markdown("**Gordon Growth Model:**")
+    st.latex(r"P_0 = \frac{D_1}{r - g} \;=\; \frac{D_0 \,(1+g)}{r - g}")
+    st.markdown("**Also**, total return \(r =\) dividend yield + capital gains yield.")
     
     D0 = st.number_input("Most recent dividend D0", value=2.0, step=0.1)
     g = st.number_input("Growth Rate g (decimal)", value=0.03, step=1e-4)
@@ -449,6 +469,14 @@ elif selected_formula == "Stock - Constant Growth Dividend Price (Gordon Growth)
             st.error("r must be greater than g.")
         else:
             st.success(f"Stock Price = {price:,.2f}")
+            D1 = D0 * (1+g)
+            div_yield = D1 / price
+            cap_gain_yield = g
+            st.markdown(
+                f"**Dividend Yield** = D₁ / P₀ = {D1:.2f}/{price:.2f} = {div_yield*100:.2f}%  \n"
+                f"**Capital Gains Yield** = g = {cap_gain_yield*100:.2f}%  \n"
+                f"**Total Return** = {div_yield*100 + cap_gain_yield*100:.2f}%"
+            )
 
 elif selected_formula == "Stock - Required Return (Gordon Growth)":
     st.subheader("Required Return from Gordon Growth")
@@ -464,9 +492,21 @@ elif selected_formula == "Stock - Required Return (Gordon Growth)":
         else:
             r_val = stock_required_return_gordon(D1, P0, g)
             st.success(f"Required Return = {r_val*100:,.2f}%")
+            st.markdown(
+                f"**Dividend Yield** = D₁/P₀ = {D1}/{P0} = {(D1/P0)*100:.2f}%  \n"
+                f"**Capital Gains Yield** = g = {g*100:.2f}%  \n"
+                f"**Total Return** = {r_val*100:.2f}%"
+            )
 
 elif selected_formula == "Stock - Non-Constant Growth Dividend Price":
     st.subheader("Stock Price with Non-Constant (Multi-Stage) Growth")
+    st.markdown("**General formula:**")
+    st.latex(r"""
+    P_0
+    = \sum_{t=1}^{n} \frac{D_t}{(1+r)^t}
+    \;+\;
+    \frac{D_{n+1}}{(r - g)\,(1+r)^n}.
+    """)
     st.write("Enter a series of dividends for each year of supernormal growth; beyond that, dividends grow at a constant rate g.")
     
     n = st.number_input("Number of years with explicit dividends", value=3, step=1)
@@ -475,7 +515,13 @@ elif selected_formula == "Stock - Non-Constant Growth Dividend Price":
     
     dividends = []
     for i in range(n):
-        d_val = st.number_input(f"Dividend at end of year {i+1}", value=2.0 + i*0.1, step=0.1, format="%.2f", key=f"nonconst_{i}")
+        d_val = st.number_input(
+            f"Dividend at end of year {i+1}", 
+            value=2.0 + i*0.1, 
+            step=0.1, 
+            format="%.2f", 
+            key=f"nonconst_{i}"
+        )
         dividends.append(d_val)
     
     if st.button("Calculate Non-Constant Growth Stock Price"):
@@ -487,7 +533,15 @@ elif selected_formula == "Stock - Non-Constant Growth Dividend Price":
 
 elif selected_formula == "Corporate Value (FCF) Model":
     st.subheader("Corporate Value Model (Free Cash Flow)")
-    st.write("Discount future FCFs, compute terminal value, subtract debt, divide by shares.")
+    st.markdown("**Firm Value** = Present Value of all FCF + PV of Terminal Value:")
+    st.latex(r"""
+    \mathrm{Value}_{\text{firm}} 
+    = \sum_{t=1}^{n} \frac{\mathrm{FCF}_t}{(1+r)^t}
+    \;+\;
+    \frac{\mathrm{FCF}_{n+1}}{(r - g)\,(1+r)^n}.
+    """)
+    st.markdown("**Equity Value** = Firm Value − Debt.")
+    st.markdown("**Stock Price** = Equity Value / Shares Outstanding.")
     
     num_years = st.number_input("Number of years of explicit FCF", value=3, step=1)
     fcf_list = []
@@ -509,7 +563,8 @@ elif selected_formula == "Corporate Value (FCF) Model":
 
 elif selected_formula == "Stock Price from PE Multiple":
     st.subheader("Stock Price from P/E Multiple")
-    st.latex(r"\text{Price} = \text{EPS} \times \text{PE ratio}")
+    st.markdown("**Multiple approach:**")
+    st.latex(r"\text{Price} = \text{EPS} \times \text{(P/E ratio)}")
     
     eps = st.number_input("Earnings per Share (EPS)", value=3.45, step=0.01)
     pe_ratio = st.number_input("Benchmark PE Ratio", value=12.5, step=0.1)
