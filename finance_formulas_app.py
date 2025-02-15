@@ -465,8 +465,8 @@ elif selected_formula == "Stock - Constant Growth Dividend Price (Gordon Growth)
     st.markdown("**Also**, total return \(r =\) dividend yield + capital gains yield.")
     
     D0 = st.number_input("Most recent dividend D0", value=2.0, step=0.1)
-    g = st.number_input("Growth Rate g (decimal)", value=0.03, step=1e-4)
-    r = st.number_input("Required Return r (decimal)", value=0.10, step=1e-4)
+    g = st.number_input("Growth Rate g (decimal)", value=0.03, step=1e-4, format="%.4f")
+    r = st.number_input("Required Return r (decimal)", value=0.10, step=1e-4, format="%.4f")
     
     if st.button("Calculate Price"):
         price = stock_price_constant_growth(D0, r, g)
